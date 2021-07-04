@@ -39,11 +39,10 @@ namespace sixtynine
 
         taskData data = { state, mqtt };
 
-        auto t1 = ReconnectWifi(20384, 6);
-        auto t2 = GatewayPingTask(10240, 2);
-        auto t3 = ReconnectMqtt(10240, 5);
-        auto t4 = SoftwareResetTask(10240, 0);
-
+        GenericTask t1 = GenericTask("reconnect-wifi-task", SoftwareResetTask);
+        GenericTask t2 = GenericTask("reconnect-mqtt-task", ReconnectMqttTask);
+        GenericTask t3 = GenericTask("gateway-ping-task", GatewayPingTask);
+        GenericTask t4 = GenericTask("software-reset-task", ReconnectWifiTask);
         t1.start(&data);
         t2.start(&data);
         t3.start(&data);

@@ -12,55 +12,30 @@ namespace sixtynine
         Mqtt *mqtt;
     };
 
-    class SoftwareResetTask: public Task
+    class GenericTask: public Task
     {
       public:
-        explicit SoftwareResetTask(uint16_t taskSize = 10240, uint8_t priority = 5)
-          : Task("software-reset-task", taskSize, priority)
-        {}
+        explicit GenericTask(
+            const char *name,
+            void (*run)(void*),
+            uint8_t priority = 5,
+            uint16_t taskSize = 10240
+        ) : Task(name, taskSize, priority)
+        {
+            _run = run;
+        }
 
         void run(void* data) override;
+
+      private:
+        void (*_run)(void*);
     };
 
-    class ReconnectWifi: public Task
-    {
-      public:
-        explicit ReconnectWifi(uint16_t taskSize = 10240, uint8_t priority = 5)
-          : Task("reconnect-wifi", taskSize, priority)
-        {}
-
-        void run(void* data) override;
-    };
-
-    class ReconnectMqtt: public Task
-    {
-      public:
-        explicit ReconnectMqtt(uint16_t taskSize = 10240, uint8_t priority = 5)
-          : Task("reconnect-mqtt", taskSize, priority)
-        {}
-
-        void run(void* data) override;
-    };
-
-    class AnimateConnection: public Task
-    {
-      public:
-        explicit AnimateConnection(uint16_t taskSize = 10240, uint8_t priority = 5)
-          : Task("animate-connection", taskSize, priority)
-        {}
-
-        void run(void* data) override;
-    };
-
-    class GatewayPingTask: public Task
-    {
-      public:
-        explicit GatewayPingTask(uint16_t taskSize = 10240, uint8_t priority = 5)
-          : Task("ping-gateway", taskSize, priority)
-        {}
-
-        void run(void* /*data*/) override;
-    };
+    void SoftwareResetTask(void* data);
+    void ReconnectWifiTask(void* data);
+    void ReconnectMqttTask(void *data);
+    void GatewayPingTask(void* data);
+    void AnimateConnectionTask(void* data);
 
 }
 

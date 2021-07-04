@@ -21,7 +21,13 @@ namespace sixtynine
         M5.dis.displaybuff((uint8_t *)buff, 0, 0);
     }
 
-    void SoftwareResetTask::run(void* data)
+    void GenericTask::run(void* data)
+    {
+        _run(data);
+    }
+
+
+    void SoftwareResetTask(void* data)
     {
         auto td = (taskData *)data;
         State *state = td->state;
@@ -45,7 +51,7 @@ namespace sixtynine
      * Try to connect to WiFi if not connected.
      * Triggers task_animateConnection().
      */
-    void ReconnectWifi::run(void* data)
+    void ReconnectWifiTask(void* data)
     {
         static int status = WL_IDLE_STATUS;
 
@@ -75,8 +81,8 @@ namespace sixtynine
                 Serial.println("[WIFI] Trying to connect to WLAN router");
 
 
-                auto t3 = AnimateConnection(10240, 5);
-                t3.start(data);
+                GenericTask t = GenericTask("animate-connection-task", AnimateConnectionTask);
+                t.start(data);
 
                 if (state->isMqttConnected()) {
                     mqtt->disconnect();
@@ -102,7 +108,7 @@ namespace sixtynine
         }
     }
 
-    void ReconnectMqtt::run(void *data)
+    void ReconnectMqttTask(void *data)
     {
 
         auto td = (taskData *)data;
@@ -122,7 +128,7 @@ namespace sixtynine
      * Show an animation while trying to connect to WiFi.
      * Show an OK icon and exit when connected.
      */
-    void AnimateConnection::run(void* data)
+    void AnimateConnectionTask(void* data)
     {
         static bool started = false;
 
@@ -174,7 +180,7 @@ namespace sixtynine
     /**
      * Ping the gateway and invalidate the wifi connection if it fails.
      */
-    void GatewayPingTask::run(void* data)
+    void GatewayPingTask(void* data)
     {
         auto td = (taskData *)data;
         State *state = td->state;
