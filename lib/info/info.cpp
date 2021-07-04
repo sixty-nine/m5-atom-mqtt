@@ -39,18 +39,17 @@ namespace sixtynine
     {
         String buff;
         StaticJsonDocument<512> doc;
+        JsonObject hardware  = doc.createNestedObject("hardware");
 
-        unsigned long upTime = millis() / 1000;
-
-        doc["chip"] = info->idfTarget;
-        doc["revision"] = info->chipRevision;
-        doc["cores"] = info->cores;
-        doc["bt"] = info->hasBt;
-        doc["ble"] = info->hasBle;
-        doc["flashSize"] = info->flashSize;
-        doc["flashType"] = info->embeddedFlash ? "embedded" : "external";
-        doc["freeHeap"] = info->heapFree;
-        doc["uptime"] = upTime;
+        doc["uptime"] = millis() / 1000;
+        hardware["chip"] = info->idfTarget;
+        hardware["revision"] = info->chipRevision;
+        hardware["cores"] = info->cores;
+        hardware["bt"] = info->hasBt;
+        hardware["ble"] = info->hasBle;
+        hardware["flashSize"] = info->flashSize;
+        hardware["flashType"] = info->embeddedFlash ? "embedded" : "external";
+        hardware["freeHeap"] = info->heapFree;
 
         serializeJson(doc, buff);
         return buff;
