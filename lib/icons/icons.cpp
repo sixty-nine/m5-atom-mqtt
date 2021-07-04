@@ -1,6 +1,6 @@
 #include "icons.h"
 
-namespace growlab
+namespace sixtynine
 {
     void copyIcon(
         const unsigned char source[],

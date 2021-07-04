@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <thread>
 
-namespace growlab
+namespace sixtynine
 {
     const unsigned char  logoImageData[272]=
     {

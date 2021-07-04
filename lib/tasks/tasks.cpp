@@ -10,7 +10,7 @@
 #include "state.h"
 #include <ESP32Ping.h>
 
-namespace growlab
+namespace sixtynine
 {
     using namespace std::chrono;
     using namespace std::this_thread;

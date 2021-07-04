@@ -16,7 +16,7 @@ void setup()
 {
     M5.begin(true, false, true);
 
-    growlab::startup(state, mqtt, true);
+    startup(state, mqtt, true);
 }
 
 void loop()

@@ -4,7 +4,7 @@
 #include "state.h"
 #include "mqtt.h"
 
-namespace growlab
+namespace sixtynine
 {
     void startup(State *state, Mqtt *mqtt, bool hasMatrix = false, bool showLogo = true);
 }

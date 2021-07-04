@@ -3,7 +3,7 @@
 
 #include "M5Atom.h"
 
-namespace growlab
+namespace sixtynine
 {
     struct RGB
     {

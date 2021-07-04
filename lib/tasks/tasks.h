@@ -5,7 +5,7 @@
 #include "state.h"
 #include "mqtt.h"
 
-namespace growlab
+namespace sixtynine
 {
     struct taskData {
         State *state;
