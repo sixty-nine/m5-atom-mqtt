@@ -10,7 +10,7 @@ using namespace sixtynine;
 void onReceive(char *topic, char *payload);
 
 State *state = new State();
-Mqtt *mqtt = new Mqtt("atom-matrix-1", MQTT_SERVER, IN_TOPIC, OUT_TOPIC, onReceive);
+Mqtt *mqtt = new Mqtt(MQTT_CLIENT_ID, MQTT_SERVER, IN_TOPIC, OUT_TOPIC, onReceive);
 
 void setup()
 {

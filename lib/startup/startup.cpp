@@ -47,6 +47,6 @@ namespace sixtynine
         t2.start(&data);
         t3.start(&data);
 
-        Serial.println("[SYS] Growlab started up");
+        Serial.println("[SYS] System started up");
     }
 }
