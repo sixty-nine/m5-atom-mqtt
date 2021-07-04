@@ -1,6 +1,7 @@
 #include "info.h"
 
 #include <ArduinoJson.h>
+#include "secrets.h"
 
 namespace sixtynine
 {
@@ -41,7 +42,9 @@ namespace sixtynine
         StaticJsonDocument<512> doc;
         JsonObject hardware  = doc.createNestedObject("hardware");
 
+        doc["clientId"] = MQTT_CLIENT_ID;
         doc["uptime"] = millis() / 1000;
+
         hardware["chip"] = info->idfTarget;
         hardware["revision"] = info->chipRevision;
         hardware["cores"] = info->cores;

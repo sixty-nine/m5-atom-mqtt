@@ -12,6 +12,16 @@ namespace sixtynine
         Mqtt *mqtt;
     };
 
+    class SoftwareResetTask: public Task
+    {
+      public:
+        explicit SoftwareResetTask(uint16_t taskSize = 10240, uint8_t priority = 5)
+          : Task("software-reset-task", taskSize, priority)
+        {}
+
+        void run(void* data) override;
+    };
+
     class ReconnectWifi: public Task
     {
       public:

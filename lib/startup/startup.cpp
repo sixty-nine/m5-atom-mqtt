@@ -42,10 +42,12 @@ namespace sixtynine
         auto t1 = ReconnectWifi(20384, 6);
         auto t2 = GatewayPingTask(10240, 2);
         auto t3 = ReconnectMqtt(10240, 5);
+        auto t4 = SoftwareResetTask(10240, 0);
 
         t1.start(&data);
         t2.start(&data);
         t3.start(&data);
+        t4.start(&data);
 
         Serial.println("[SYS] System started up");
     }

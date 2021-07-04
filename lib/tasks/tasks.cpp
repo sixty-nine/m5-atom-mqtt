@@ -8,6 +8,7 @@
 #include "secrets.h"
 #include "mqtt.h"
 #include "state.h"
+#include "secrets.h"
 #include <ESP32Ping.h>
 
 namespace sixtynine
@@ -18,6 +19,26 @@ namespace sixtynine
     void displayBuffer(void * buff)
     {
         M5.dis.displaybuff((uint8_t *)buff, 0, 0);
+    }
+
+    void SoftwareResetTask::run(void* data)
+    {
+        auto td = (taskData *)data;
+        State *state = td->state;
+
+        Serial.println("[TASK] Starting Task SoftwareReset");
+
+        std::this_thread::sleep_for(TIME_BETWEEN_RESETS_MS);
+
+        Serial.println("[RST] *******Recurrent Reset*******");
+
+        if (state->isWifiConnected())
+        {
+            WiFi.disconnect();
+            std::this_thread::sleep_for(milliseconds { 1000 });
+        }
+
+        ESP.restart();
     }
 
     /**
