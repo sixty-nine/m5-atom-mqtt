@@ -29,24 +29,31 @@ namespace sixtynine
         );
     }
 
-    void startup(State *state, Mqtt *mqtt, bool hasMatrix, bool showLogo)
-    {
+    void startup(
+        State *state,
+        Mqtt *mqtt,
+        M5Atom *m5,
+        bool hasMatrix,
+        bool showLogo
+    ) {
         if (hasMatrix && showLogo)
         {
             startupAnimate();
             delay(3000);
         }
 
-        taskData data = { state, mqtt };
+        taskData data = { state, mqtt, m5 };
 
         GenericTask t1 = GenericTask("reconnect-wifi-task", SoftwareResetTask);
         GenericTask t2 = GenericTask("reconnect-mqtt-task", ReconnectMqttTask);
         GenericTask t3 = GenericTask("gateway-ping-task", GatewayPingTask);
         GenericTask t4 = GenericTask("software-reset-task", ReconnectWifiTask);
+        GenericTask t5 = GenericTask("button-watch-task", ButtonWatchTask);
         t1.start(&data);
         t2.start(&data);
         t3.start(&data);
         t4.start(&data);
+        t5.start(&data);
 
         Serial.println("[SYS] System started up");
     }

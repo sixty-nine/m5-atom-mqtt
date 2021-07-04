@@ -3,10 +3,17 @@
 
 #include "state.h"
 #include "mqtt.h"
+#include "M5Atom.h"
 
 namespace sixtynine
 {
-    void startup(State *state, Mqtt *mqtt, bool hasMatrix = false, bool showLogo = true);
+    void startup(
+        State *state,
+        Mqtt *mqtt,
+        M5Atom *m5,
+        bool hasMatrix = false,
+        bool showLogo = true
+    );
 }
 
 #endif

@@ -10,18 +10,24 @@ using namespace sixtynine;
 void onReceive(char *topic, char *payload);
 
 State *state = new State();
-Mqtt *mqtt = new Mqtt(MQTT_CLIENT_ID, MQTT_SERVER, IN_TOPIC, OUT_TOPIC, onReceive);
+
+Mqtt *mqtt = new Mqtt(
+    MQTT_CLIENT_ID,
+    MQTT_SERVER,
+    IN_TOPIC,
+    OUT_TOPIC,
+    onReceive
+);
 
 void setup()
 {
     M5.begin(true, false, true);
 
-    startup(state, mqtt, true);
+    startup(state, mqtt, &M5, true);
 }
 
 void loop()
 {
-    M5.update();
 }
 
 

@@ -10,6 +10,7 @@ namespace sixtynine
     struct taskData {
         State *state;
         Mqtt *mqtt;
+        M5Atom *m5;
     };
 
     class GenericTask: public Task
@@ -36,6 +37,7 @@ namespace sixtynine
     void ReconnectMqttTask(void *data);
     void GatewayPingTask(void* data);
     void AnimateConnectionTask(void* data);
+    void ButtonWatchTask(void* data);
 
 }
 

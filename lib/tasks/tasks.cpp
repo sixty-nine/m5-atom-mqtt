@@ -209,4 +209,23 @@ namespace sixtynine
         }
     }
 
+    void ButtonWatchTask(void *data)
+    {
+        auto td = (taskData *)data;
+        Mqtt *mqtt = td->mqtt;
+        M5Atom *m5 = td->m5;
+
+        Serial.println("[TASK] Starting Task ButtonWatch");
+
+        while (true)
+        {
+            if (m5->Btn.wasPressed())
+            {
+                Serial.println("[SYS] Button pressed");
+                mqtt->send("Button pressed");
+            }
+
+            m5->Btn.read();
+        }
+    }
 }
