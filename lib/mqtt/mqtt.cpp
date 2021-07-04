@@ -19,7 +19,8 @@ Mqtt::Mqtt(
     _pubSubClient.setClient(_mqttClient);
     _pubSubClient.setServer(mqttServer, 1883);
 
-    auto cb = [onReceiveCallback](char* topic, byte* payload, unsigned int length) {
+    auto cb = [onReceiveCallback](char* topic, byte* payload, unsigned int length)
+    {
         char buffer[length + 1];
         memset(buffer, 0, length + 1);
 
