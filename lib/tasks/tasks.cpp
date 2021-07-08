@@ -26,6 +26,18 @@ namespace sixtynine
         _run(data);
     }
 
+    void doSoftwareReset(State *state)
+    {
+
+        if (state->isWifiConnected())
+        {
+            WiFi.disconnect();
+            std::this_thread::sleep_for(milliseconds { 1000 });
+        }
+
+        ESP.restart();
+    }
+
 
     void SoftwareResetTask(void* data)
     {
@@ -36,15 +48,10 @@ namespace sixtynine
 
         std::this_thread::sleep_for(TIME_BETWEEN_RESETS_MS);
 
-        Serial.println("[RST] *******Recurrent Reset*******");
+        Serial.println("[RST] ************** Recurrent Reset **************");
+        Serial.println("\n");
 
-        if (state->isWifiConnected())
-        {
-            WiFi.disconnect();
-            std::this_thread::sleep_for(milliseconds { 1000 });
-        }
-
-        ESP.restart();
+        doSoftwareReset(state);
     }
 
     /**

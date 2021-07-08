@@ -4,6 +4,7 @@
 #include "info.h"
 #include "mqtt.h"
 #include "secrets.h"
+#include "tasks.h"
 
 using namespace sixtynine;
 
@@ -30,21 +31,42 @@ void loop()
 {
 }
 
+// ============================================================================
 
+void showInfo()
+{
+    espInfo info;
+    gatherEspInfo(&info);
+
+    String json = getEspInfoJson(&info);
+    Serial.println("[MQTT] " + json);
+    mqtt->send(json);
+}
+
+void showStatus()
+{
+    Serial.println("STATUS");
+}
+
+void resetDevice()
+{
+    Serial.println("[RST] ************** Remote Reset **************");
+    Serial.println("\n");
+    doSoftwareReset(state);
+}
 
 void onReceive(char *topic, char *payload)
 {
     Serial.print("[MQTT] Message arrived: ");
     Serial.println(payload);
 
-    if (String(payload).equals("info"))
-    {
-        espInfo info;
-        gatherEspInfo(&info);
+    String myPayload = String(payload);
+    myPayload.toLowerCase();
 
-        String json = getEspInfoJson(&info);
-        Serial.println("[MQTT] " + json);
-        mqtt->send(json);
-    }
+    if (myPayload.equals("info")) showInfo();
+    else if (myPayload.equals("status")) showStatus();
+    else if (myPayload.equals("reset")) resetDevice();
+    else if (myPayload.startsWith("display")) resetDevice();
+    else if (myPayload.startsWith("draw")) resetDevice();
 }
 

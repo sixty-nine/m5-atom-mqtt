@@ -39,6 +39,7 @@ namespace sixtynine
     void AnimateConnectionTask(void* data);
     void ButtonWatchTask(void* data);
 
+    void doSoftwareReset(State *state);
 }
 
 #endif
