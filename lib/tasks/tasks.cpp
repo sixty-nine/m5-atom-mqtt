@@ -31,6 +31,7 @@ namespace sixtynine
 
         if (state->isWifiConnected())
         {
+            // TODO: disable ReconnectWifiTask
             WiFi.disconnect();
             std::this_thread::sleep_for(milliseconds { 1000 });
         }
