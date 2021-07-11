@@ -39,8 +39,14 @@ void showInfo()
     gatherEspInfo(&info);
 
     String json = getEspInfoJson(&info);
-    Serial.println("[MQTT] " + json);
+    printEspInfo(&info);
     mqtt->send(json);
+
+    networkInfo netInfo;
+    gatherNetworkInfo(&netInfo);
+    printNetworkInfo(&netInfo);
+
+    printStatus();
 }
 
 void showStatus()

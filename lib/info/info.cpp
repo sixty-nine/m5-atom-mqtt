@@ -5,6 +5,31 @@
 
 namespace sixtynine
 {
+
+    char nibble_to_hex(uint8_t nibble) {  // convert a 4-bit nibble to a hexadecimal character (31684 B)
+        nibble &= 0xF;
+        return nibble > 9 ? nibble - 10 + 'A' : nibble + '0';
+    }
+
+    String getMacAddress(uint8_t mac[])
+    {
+        String res = "";
+
+        for (int i = 5; i >= 0; i--) {
+            if (mac[i] < 16) {
+                res += "0";
+            }
+            res += nibble_to_hex(mac[i]);
+            Serial.print(mac[i], HEX);
+            if (i > 0) {
+                res += ":";
+                Serial.print(":");
+            }
+        }
+
+        return res;
+    }
+
     void gatherEspInfo(espInfo *info)
     {
         esp_chip_info_t chip_info;
@@ -20,20 +45,49 @@ namespace sixtynine
         info->heapFree = esp_get_minimum_free_heap_size();
     }
 
+    void gatherNetworkInfo(networkInfo *info)
+    {
+        info->localIp = WiFi.localIP();
+        info->subnetMask = WiFi.subnetMask();
+        info->gatewayIp = WiFi.gatewayIP();
+        WiFi.macAddress((*info).localMacAddr);
+        info->rssi = WiFi.RSSI();
+    }
+
     void printEspInfo(espInfo *info)
     {
-        Serial.printf("This is %s chip with %d CPU core(s), WiFi%s%s, ",
+        Serial.printf("[INFO] Chip %s, %d CPU core(s), WiFi%s%s\r\n",
                 info->idfTarget,
                 info->cores,
                 info->hasBt ? "/BT" : "",
                 info->hasBle ? "/BLE" : "");
 
-        Serial.printf("silicon revision %d, ", info->chipRevision);
+        Serial.printf("[INFO] Chip revision: %d\r\n", info->chipRevision);
 
-        Serial.printf("%dMB %s flash\n", info->flashSize / (1024 * 1024),
+        Serial.printf("[INFO] Memory: %dMB %s flash\r\n", info->flashSize / (1024 * 1024),
                 info->embeddedFlash ? "embedded" : "external");
 
-        Serial.printf("Minimum free heap size: %d Kb\n", info->heapFree / 1024);
+        Serial.printf("[INFO] Minimum free heap size: %d Kb\r\n", info->heapFree / 1024);
+    }
+
+    void printNetworkInfo(networkInfo *info)
+    {
+        Serial.print("[INFO] Local IP: ");
+        Serial.println(info->localIp);
+        Serial.print("[INFO] Subnet mask: ");
+        Serial.println(info->subnetMask);
+        Serial.print("[INFO] Gateway IP: ");
+        Serial.println(info->gatewayIp);
+        Serial.print("[INFO] Local MAC: ");
+        Serial.println(getMacAddress(info->localMacAddr));
+        Serial.println("[INFO] SSID: " + String(SSID));
+        Serial.print("[INFO] RSSI: ");
+        Serial.println(info->rssi);
+    }
+
+    void printStatus()
+    {
+        Serial.printf("[INFO] Up-time: %d sec\r\n", (millis() / 1000));
     }
 
     String getEspInfoJson(espInfo *info)

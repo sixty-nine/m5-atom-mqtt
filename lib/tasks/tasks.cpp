@@ -191,6 +191,7 @@ namespace sixtynine
     void GatewayPingTask(void* data)
     {
         auto td = (taskData *)data;
+        Mqtt *mqtt = td->mqtt;
         State *state = td->state;
 
         Serial.println("[TASK] Starting Task pingGateway");
@@ -210,6 +211,7 @@ namespace sixtynine
                 }
                 else {
                     Serial.println("[PING] OK");
+                    mqtt->send("HeartBeat [" + String(millis() / 1000) + "]");
                 }
             }
 

@@ -2,6 +2,7 @@
 #define info_h
 
 #include <Arduino.h>
+#include <WiFi.h>
 
 namespace sixtynine
 {
@@ -16,9 +17,28 @@ namespace sixtynine
         uint32_t heapFree;
     };
 
+    struct networkInfo {
+        IPAddress localIp;
+        IPAddress subnetMask;
+        IPAddress gatewayIp;
+        uint8_t localMacAddr[6];
+        long rssi;
+    };
+
+    struct status {
+        char *deviceId;
+        unsigned long upTime;
+
+    };
+
     void gatherEspInfo(espInfo *info);
-    void printEspInfo(espInfo *info);
+    void gatherNetworkInfo(networkInfo *info);
+
     String getEspInfoJson(espInfo *info);
+
+    void printEspInfo(espInfo *info);
+    void printNetworkInfo(networkInfo *info);
+    void printStatus();
 }
 
 #endif
