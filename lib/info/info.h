@@ -14,7 +14,14 @@ namespace sixtynine
         int chipRevision;
         uint32_t flashSize;
         bool embeddedFlash;
-        uint32_t heapFree;
+    };
+
+    struct memInfo {
+        uint32_t heapSize;
+        uint32_t freeHeap;
+        uint32_t minFreeHeap;
+        uint32_t psramSize;
+        uint32_t freePsramSize;
     };
 
     struct networkInfo {
@@ -33,10 +40,12 @@ namespace sixtynine
 
     void gatherEspInfo(espInfo *info);
     void gatherNetworkInfo(networkInfo *info);
+    void gatherMemInfo(memInfo *info);
 
     String getEspInfoJson(espInfo *info);
 
     void printEspInfo(espInfo *info);
+    void printMemInfo(memInfo *info);
     void printNetworkInfo(networkInfo *info);
     void printStatus();
 }

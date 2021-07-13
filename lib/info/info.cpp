@@ -42,7 +42,15 @@ namespace sixtynine
         info->chipRevision = chip_info.revision;
         info->flashSize = spi_flash_get_chip_size();
         info->embeddedFlash = chip_info.features & CHIP_FEATURE_EMB_FLASH;
-        info->heapFree = esp_get_minimum_free_heap_size();
+    }
+
+    void gatherMemInfo(memInfo *info)
+    {
+        info->heapSize = ESP.getHeapSize();
+        info->freeHeap = esp_get_free_heap_size();
+        info->minFreeHeap = esp_get_minimum_free_heap_size();
+        info->psramSize = ESP.getPsramSize();
+        info->freePsramSize = ESP.getFreePsram();
     }
 
     void gatherNetworkInfo(networkInfo *info)
@@ -66,8 +74,15 @@ namespace sixtynine
 
         Serial.printf("[INFO] Memory: %dMB %s flash\r\n", info->flashSize / (1024 * 1024),
                 info->embeddedFlash ? "embedded" : "external");
+    }
 
-        Serial.printf("[INFO] Minimum free heap size: %d Kb\r\n", info->heapFree / 1024);
+    void printMemInfo(memInfo *info)
+    {
+        Serial.printf("[INFO] Heap size: %d Kb\r\n", info->heapSize / 1024);
+        Serial.printf("[INFO] Free heap size: %d Kb\r\n", info->freeHeap / 1024);
+        Serial.printf("[INFO] Minimum free heap size: %d Kb\r\n", info->minFreeHeap / 1024);
+        Serial.printf("[INFO] PSRAM size: %d Kb\r\n", info->psramSize / 1024);
+        Serial.printf("[INFO] Free PSRAM size: %d Kb\r\n", info->freePsramSize / 1024);
     }
 
     void printNetworkInfo(networkInfo *info)
@@ -106,7 +121,6 @@ namespace sixtynine
         hardware["ble"] = info->hasBle;
         hardware["flashSize"] = info->flashSize;
         hardware["flashType"] = info->embeddedFlash ? "embedded" : "external";
-        hardware["freeHeap"] = info->heapFree;
 
         serializeJson(doc, buff);
         return buff;

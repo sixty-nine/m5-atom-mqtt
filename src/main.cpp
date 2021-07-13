@@ -33,8 +33,20 @@ void loop()
 
 // ============================================================================
 
+void showStatus()
+{
+    Serial.println("---------- STATUS ----------");
+    printStatus();
+
+    memInfo info;
+    gatherMemInfo(&info);
+    printMemInfo(&info);
+    Serial.println("----------------------------");
+}
+
 void showInfo()
 {
+    Serial.println("----------  INFO  ----------");
     espInfo info;
     gatherEspInfo(&info);
 
@@ -45,13 +57,7 @@ void showInfo()
     networkInfo netInfo;
     gatherNetworkInfo(&netInfo);
     printNetworkInfo(&netInfo);
-
-    printStatus();
-}
-
-void showStatus()
-{
-    Serial.println("STATUS");
+    Serial.println("----------------------------");
 }
 
 void resetDevice()
