@@ -35,27 +35,31 @@ void loop()
 
 void showStatus()
 {
-    Serial.println("---------- STATUS ----------");
-    printStatus();
-
     memInfo info;
     gatherMemInfo(&info);
+
+    String json = getStatusJson(&info);
+    mqtt->send(json);
+
+    Serial.println("---------- STATUS ----------");
+    printStatus();
     printMemInfo(&info);
     Serial.println("----------------------------");
 }
 
 void showInfo()
 {
-    Serial.println("----------  INFO  ----------");
     espInfo info;
+    networkInfo netInfo;
+
     gatherEspInfo(&info);
+    gatherNetworkInfo(&netInfo);
 
     String json = getEspInfoJson(&info);
-    printEspInfo(&info);
     mqtt->send(json);
 
-    networkInfo netInfo;
-    gatherNetworkInfo(&netInfo);
+    Serial.println("----------  INFO  ----------");
+    printEspInfo(&info);
     printNetworkInfo(&netInfo);
     Serial.println("----------------------------");
 }
@@ -78,7 +82,7 @@ void onReceive(char *topic, char *payload)
     if (myPayload.equals("info")) showInfo();
     else if (myPayload.equals("status")) showStatus();
     else if (myPayload.equals("reset")) resetDevice();
-    else if (myPayload.startsWith("display")) resetDevice();
-    else if (myPayload.startsWith("draw")) resetDevice();
+    else if (myPayload.startsWith("display")) ;
+    else if (myPayload.startsWith("draw")) ;
 }
 

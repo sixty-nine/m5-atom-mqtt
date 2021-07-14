@@ -105,14 +105,15 @@ namespace sixtynine
         Serial.printf("[INFO] Up-time: %d sec\r\n", (millis() / 1000));
     }
 
-    String getEspInfoJson(espInfo *info)
+    String getEspInfoJson(espInfo *info, bool pretty)
     {
         String buff;
         StaticJsonDocument<512> doc;
-        JsonObject hardware  = doc.createNestedObject("hardware");
+        JsonObject payload = doc.createNestedObject("payload");
+        JsonObject hardware  = payload.createNestedObject("hardware");
 
-        doc["clientId"] = MQTT_CLIENT_ID;
-        doc["uptime"] = millis() / 1000;
+        doc["deviceId"] = MQTT_CLIENT_ID;
+        doc["msgType"] = "info";
 
         hardware["chip"] = info->idfTarget;
         hardware["revision"] = info->chipRevision;
@@ -122,7 +123,39 @@ namespace sixtynine
         hardware["flashSize"] = info->flashSize;
         hardware["flashType"] = info->embeddedFlash ? "embedded" : "external";
 
-        serializeJson(doc, buff);
+        if (pretty) {
+          serializeJsonPretty(doc, buff);
+        } else {
+            serializeJson(doc, buff);
+        }
+
+        return buff;
+    }
+
+    String getStatusJson(memInfo *info, bool pretty)
+    {
+        String buff;
+        StaticJsonDocument<512> doc;
+        JsonObject payload = doc.createNestedObject("payload");
+        JsonObject mem = payload.createNestedObject("memory");
+
+        doc["deviceId"] = MQTT_CLIENT_ID;
+        doc["msgType"] = "status";
+
+        payload["uptime"] = millis() / 1000;
+
+        mem["heapSize"] = info->heapSize;
+        mem["freeHeapSize"] = info->freeHeap;
+        mem["minHeapSize"] = info->minFreeHeap;
+        mem["psramSize"] = info->psramSize;
+        mem["freePsramSize"] = info->freePsramSize;
+
+        if (pretty) {
+          serializeJsonPretty(doc, buff);
+        } else {
+            serializeJson(doc, buff);
+        }
+
         return buff;
     }
 }

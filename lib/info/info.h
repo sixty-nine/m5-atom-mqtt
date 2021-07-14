@@ -42,7 +42,8 @@ namespace sixtynine
     void gatherNetworkInfo(networkInfo *info);
     void gatherMemInfo(memInfo *info);
 
-    String getEspInfoJson(espInfo *info);
+    String getEspInfoJson(espInfo *info, bool pretty = false);
+    String getStatusJson(memInfo *info, bool pretty = false);
 
     void printEspInfo(espInfo *info);
     void printMemInfo(memInfo *info);

@@ -42,7 +42,11 @@ void Mqtt::disconnect()
 
 void Mqtt::send(String data)
 {
-    _pubSubClient.publish(_outTopic, data.c_str());
+    bool result = _pubSubClient.publish(_outTopic, data.c_str(), data.length());
+
+    if (!result) {
+        Serial.println("[ERR] MQTT publish failed");
+    }
 }
 
 void Mqtt::checkMqtt(State *state)
