@@ -26,15 +26,21 @@ namespace sixtynine
         _run(data);
     }
 
-    void doSoftwareReset(State *state)
+    void doSoftwareReset(State *state, Mqtt *mqtt, String reason)
     {
-
         if (state->isWifiConnected())
         {
+            StaticJsonDocument<JSON_OBJECT_SIZE(1)> doc;
+            JsonObject object = doc.to<JsonObject>();
+            object["reason"] = reason.c_str();
+            mqtt->sendJson("remote-reset", &object);
+            std::this_thread::sleep_for(milliseconds { 1000 });
+
             // TODO: disable ReconnectWifiTask
             WiFi.disconnect();
             std::this_thread::sleep_for(milliseconds { 1000 });
         }
+
 
         ESP.restart();
     }
@@ -44,6 +50,7 @@ namespace sixtynine
     {
         auto td = (taskData *)data;
         State *state = td->state;
+        Mqtt *mqtt = td->mqtt;
 
         Serial.println("[TASK] Starting Task SoftwareReset");
 
@@ -52,7 +59,7 @@ namespace sixtynine
         Serial.println("[RST] ************** Recurrent Reset **************");
         Serial.println("\n");
 
-        doSoftwareReset(state);
+        doSoftwareReset(state, mqtt, "software");
     }
 
     /**
@@ -211,7 +218,7 @@ namespace sixtynine
                 }
                 else {
                     Serial.println("[PING] OK");
-                    mqtt->send("HeartBeat [" + String(millis() / 1000) + "]");
+                    mqtt->sendJson("heartbeat");
                 }
             }
 
@@ -232,7 +239,7 @@ namespace sixtynine
             if (m5->Btn.wasPressed())
             {
                 Serial.println("[SYS] Button pressed");
-                mqtt->send("Button pressed");
+                mqtt->sendJson("button-pressed");
             }
 
             m5->Btn.read();

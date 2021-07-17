@@ -39,7 +39,7 @@ namespace sixtynine
     void AnimateConnectionTask(void* data);
     void ButtonWatchTask(void* data);
 
-    void doSoftwareReset(State *state);
+    void doSoftwareReset(State *state, Mqtt *mqtt, String reason);
 }
 
 #endif

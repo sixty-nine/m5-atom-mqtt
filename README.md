@@ -25,18 +25,23 @@ mosquitto_pub -t "/growlab/inTopic" -m info
 
 ### Messages
 
-#### IN
-
 Format:
 
 ```json
 {
-  "deviceId": "<device-id>",
-  "msgType": "<message-type>",
+  "id": "<device-id>",
+  "type": "<message-type>",
+  "timestamp": 123,
   "payload": {
   }
 }
 ```
+
+#### IN
+
+##### PING
+
+Request a PONG reply from the device.
 
 ##### RESET
 
@@ -51,25 +56,6 @@ Request device reset.
 ##### STATUS
 
 Get device status, i.e. dynamic values.
-
-###### MQTT output
-
-```json
-{
-  "deviceId": "atom-matrix-1",
-  "msgType": "status",
-  "payload": {
-    "uptime": 2478,
-    "memory": {
-      "heapSize": 355512,
-      "freeHeapSize": 143880,
-      "minHeapSize": 129788,
-      "psramSize": 0,
-      "freePsramSize": 0
-    }
-  }
-}
-```
 
 ###### Serial output
 
@@ -87,27 +73,6 @@ Get device status, i.e. dynamic values.
 ##### INFO
 
 Get device information, i.e. static info like hardware infos.
-
-###### MQTT output
-
-```json
-{
-  "deviceId": "atom-matrix-1",
-  "msgType": "info",
-  "payload": {
-    "hardware": {
-      "chip": "esp32",
-      "revision": 1,
-      "cores": 2,
-      "bt": true,
-      "ble": true,
-      "flashSize": 4194304,
-      "flashType": "embedded",
-      "hasPsram": false
-    }
-  }
-}
-```
 
 ###### Serial output
 
@@ -134,17 +99,42 @@ Draw the given _buffer_ to the LED matrix.
 
 #### OUT
 
+##### CONNECT
+
+Sent on MQTT connection.
+
+```json
+{
+  "id":"atom-matrix-1",
+  "type":"connect",
+  "timestamp":131
+}
+```
+
+##### RESET
+
+Sent before resetting.
+
+```json
+{
+  "id":"atom-matrix-1",
+  "type":"reset",
+  "timestamp":131,
+  "payload": {
+    "reason": "software | remote"
+  }
+}
+```
+
 ##### BUTTON_PRESS
 
 Sent when the button was pressed.
 
 ```json
 {
-  "deviceId": "atom-matrix-1",
-  "msgType": "button-pressed",
-  "payload": {
-    "timestamp": 131
-  }
+  "id":"atom-matrix-1",
+  "type":"button-pressed",
+  "timestamp":10812
 }
 ```
 
@@ -154,18 +144,73 @@ Periodically sent.
 
 ```json
 {
-  "deviceId": "atom-matrix-1",
-  "msgType": "heartbeat",
-  "payload": {
-    "timestamp": 131
-  }
+  "id":"atom-matrix-1",
+  "type":"heartbeat",
+  "timestamp":10812
+}
+```
+
+##### PONG
+
+Sent in reply to a PING.
+
+```json
+{
+  "id":"atom-matrix-1",
+  "type":"pong",
+  "timestamp": 10812
 }
 ```
 
 ##### STATUS
 
-TBD
+Replies to a status message.
+
+
+```json
+{
+   "id":"atom-matrix-1",
+   "type":"status",
+   "timestamp":10958,
+   "payload":{
+      "memory":{
+         "heapSize":355856,
+         "freeHeapSize":134712,
+         "minHeapSize":129496,
+         "psramSize":0,
+         "freePsramSize":0
+      }
+   }
+}
+```
 
 ##### INFO
 
-TBD
+Replies to an info message.
+
+```json
+{
+  "id": "atom-matrix-1",
+  "type": "status",
+  "timestamp": 18897,
+  "payload": {
+    "hardware": {
+      "chip": "esp32",
+      "revision": 1,
+      "cores": 2,
+      "bt": true,
+      "ble": true,
+      "flashSize": 4194304,
+      "flashType": "embedded"
+    },
+    "network": {
+      "ip": "192.168.0.69",
+      "gateway": "192.168.0.1",
+      "netmask": "255.255.255.0",
+      "mac": "0:2:9:1:02:0",
+      "ssid": "dreamcraft-s",
+      "rssi": -60
+    }
+  }
+}
+```

@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include "mqtt.h"
 
 namespace sixtynine
 {
@@ -42,8 +43,8 @@ namespace sixtynine
     void gatherNetworkInfo(networkInfo *info);
     void gatherMemInfo(memInfo *info);
 
-    String getEspInfoJson(espInfo *info, bool pretty = false);
-    String getStatusJson(memInfo *info, bool pretty = false);
+    void sendDeviceInfo(Mqtt *mqtt, espInfo *info, networkInfo *netInfo);
+    void sendStatus(Mqtt *mqtt, memInfo *info);
 
     void printEspInfo(espInfo *info);
     void printMemInfo(memInfo *info);

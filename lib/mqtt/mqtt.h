@@ -19,7 +19,9 @@ class Mqtt
             void (*onReceiveCallback)(char*, char*)
         );
         void checkMqtt(State *state);
+        JsonObject *createJsonObject();
         void send(String data);
+        void sendJson(String msgType, JsonObject *payload = 0, bool pretty = true);
         void disconnect();
 
     private:

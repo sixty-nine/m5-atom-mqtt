@@ -18,6 +18,7 @@ Mqtt::Mqtt(
     _outTopic = outTopic;
     _pubSubClient.setClient(_mqttClient);
     _pubSubClient.setServer(mqttServer, 1883);
+    _pubSubClient.setBufferSize(1024);
 
     auto cb = [onReceiveCallback](char* topic, byte* payload, unsigned int length)
     {
@@ -49,6 +50,30 @@ void Mqtt::send(String data)
     }
 }
 
+void Mqtt::sendJson(String msgType, JsonObject *payload, bool pretty)
+{
+    String buff;
+    StaticJsonDocument<1024> doc;
+    JsonObject obj;
+
+    doc["id"] = _clientId;
+    doc["type"] = msgType;
+    doc["timestamp"] = millis();
+
+    if (NULL != payload) {
+        obj = doc.createNestedObject("payload");
+        obj.set(*payload);
+    }
+
+    if (pretty) {
+        serializeJsonPretty(doc, buff);
+    } else {
+        serializeJson(doc, buff);
+    }
+
+    send(buff);
+}
+
 void Mqtt::checkMqtt(State *state)
 {
     auto wifiOk = state->isWifiConnected();
@@ -77,10 +102,7 @@ void Mqtt::checkMqtt(State *state)
         if (_pubSubClient.connect(_clientId))
         {
             Serial.println("connected");
-
-            String message = "Connect from " + String(_clientId);
-            _pubSubClient.publish(_outTopic, message.c_str());
-
+            sendJson("connect");
             _pubSubClient.subscribe(_inTopic);
 
             state->setMqttConnected(true);

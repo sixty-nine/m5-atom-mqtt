@@ -38,8 +38,7 @@ void showStatus()
     memInfo info;
     gatherMemInfo(&info);
 
-    String json = getStatusJson(&info);
-    mqtt->send(json);
+    sendStatus(mqtt, &info);
 
     Serial.println("---------- STATUS ----------");
     printStatus();
@@ -55,8 +54,7 @@ void showInfo()
     gatherEspInfo(&info);
     gatherNetworkInfo(&netInfo);
 
-    String json = getEspInfoJson(&info);
-    mqtt->send(json);
+    sendDeviceInfo(mqtt, &info, &netInfo);
 
     Serial.println("----------  INFO  ----------");
     printEspInfo(&info);
@@ -68,7 +66,12 @@ void resetDevice()
 {
     Serial.println("[RST] ************** Remote Reset **************");
     Serial.println("\n");
-    doSoftwareReset(state);
+    doSoftwareReset(state, mqtt, "software");
+}
+
+void sendPong()
+{
+    mqtt->sendJson("pong");
 }
 
 void onReceive(char *topic, char *payload)
@@ -84,5 +87,6 @@ void onReceive(char *topic, char *payload)
     else if (myPayload.equals("reset")) resetDevice();
     else if (myPayload.startsWith("display")) ;
     else if (myPayload.startsWith("draw")) ;
+    else if (myPayload.startsWith("ping")) sendPong();
 }
 

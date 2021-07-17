@@ -105,15 +105,12 @@ namespace sixtynine
         Serial.printf("[INFO] Up-time: %d sec\r\n", (millis() / 1000));
     }
 
-    String getEspInfoJson(espInfo *info, bool pretty)
+    void sendDeviceInfo(Mqtt *mqtt, espInfo *info, networkInfo *netInfo)
     {
-        String buff;
-        StaticJsonDocument<512> doc;
-        JsonObject payload = doc.createNestedObject("payload");
-        JsonObject hardware  = payload.createNestedObject("hardware");
-
-        doc["deviceId"] = MQTT_CLIENT_ID;
-        doc["msgType"] = "info";
+        StaticJsonDocument<2048> doc;
+        JsonObject object = doc.to<JsonObject>();
+        JsonObject hardware  = object.createNestedObject("hardware");
+        JsonObject network  = object.createNestedObject("network");
 
         hardware["chip"] = info->idfTarget;
         hardware["revision"] = info->chipRevision;
@@ -123,26 +120,21 @@ namespace sixtynine
         hardware["flashSize"] = info->flashSize;
         hardware["flashType"] = info->embeddedFlash ? "embedded" : "external";
 
-        if (pretty) {
-          serializeJsonPretty(doc, buff);
-        } else {
-            serializeJson(doc, buff);
-        }
+        network["ip"] = netInfo->localIp;
+        network["gateway"] = netInfo->gatewayIp;
+        network["netmask"] = netInfo->subnetMask;
+        network["mac"] = getMacAddress(netInfo->localMacAddr);
+        network["ssid"] = String(SSID);
+        network["rssi"] = netInfo->rssi;
 
-        return buff;
+        mqtt->sendJson("status", &object);
     }
 
-    String getStatusJson(memInfo *info, bool pretty)
+    void sendStatus(Mqtt *mqtt, memInfo *info)
     {
-        String buff;
-        StaticJsonDocument<512> doc;
-        JsonObject payload = doc.createNestedObject("payload");
-        JsonObject mem = payload.createNestedObject("memory");
-
-        doc["deviceId"] = MQTT_CLIENT_ID;
-        doc["msgType"] = "status";
-
-        payload["uptime"] = millis() / 1000;
+        StaticJsonDocument<1024> doc;
+        JsonObject object = doc.to<JsonObject>();
+        JsonObject mem = object.createNestedObject("memory");
 
         mem["heapSize"] = info->heapSize;
         mem["freeHeapSize"] = info->freeHeap;
@@ -150,12 +142,6 @@ namespace sixtynine
         mem["psramSize"] = info->psramSize;
         mem["freePsramSize"] = info->freePsramSize;
 
-        if (pretty) {
-          serializeJsonPretty(doc, buff);
-        } else {
-            serializeJson(doc, buff);
-        }
-
-        return buff;
+        mqtt->sendJson("status", &object);
     }
 }
