@@ -32,6 +32,7 @@ namespace sixtynine
     void startup(
         State *state,
         Mqtt *mqtt,
+        Display *display,
         M5Atom *m5,
         bool hasMatrix,
         bool showLogo
@@ -42,7 +43,7 @@ namespace sixtynine
             delay(3000);
         }
 
-        taskData data = { state, mqtt, m5 };
+        taskData data = { state, mqtt, display, m5 };
 
         GenericTask t1 = GenericTask("reconnect-wifi-task", SoftwareResetTask);
         GenericTask t2 = GenericTask("reconnect-mqtt-task", ReconnectMqttTask);

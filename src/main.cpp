@@ -1,4 +1,5 @@
 #include "M5Atom.h"
+#include "icons.h"
 #include "startup.h"
 #include "state.h"
 #include "info.h"
@@ -20,11 +21,13 @@ Mqtt *mqtt = new Mqtt(
     onReceive
 );
 
+Display *display = new Display(&M5.dis);
+
 void setup()
 {
     M5.begin(true, false, true);
 
-    startup(state, mqtt, &M5, true);
+    startup(state, mqtt, display, &M5, true);
 }
 
 void loop()

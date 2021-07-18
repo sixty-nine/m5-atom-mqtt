@@ -150,6 +150,7 @@ namespace sixtynine
 
         auto td = (taskData *)data;
         State *state = td->state;
+        Display *display = td->display;
 
         if (!started)
         {
@@ -157,26 +158,15 @@ namespace sixtynine
 
             Serial.println("[TASK] Starting Task animateConnection");
 
-            int d = 500;
-            unsigned char network1[77];
-            unsigned char network2[77];
-            unsigned char network3[77];
-            unsigned char ok[77];
+            auto anim = new animations::NetworkConnectAnimation();
 
-            copyIcon(icons::network1, network1, { 0x45, 0x8b, 0xd1 });
-            copyIcon(icons::network2, network2, { 0x32, 0x65, 0x98 });
-            copyIcon(icons::network3, network3, { 0x23, 0x46, 0x6a });
+            unsigned char ok[77];
             copyIcon(icons::ok, ok, { 0x55, 0xaa, 0x00 });
 
             bool connected = false;
             while (!connected)
             {
-                displayBuffer(network1);
-                sleep_for(milliseconds { d });
-                displayBuffer(network2);
-                sleep_for(milliseconds { d });
-                displayBuffer(network3);
-                sleep_for(milliseconds { 2 * d });
+                display->showAnimation(anim->getFrames());
                 connected = state->isWifiConnected();
             }
 
@@ -232,15 +222,9 @@ namespace sixtynine
         auto td = (taskData *)data;
         Mqtt *mqtt = td->mqtt;
         M5Atom *m5 = td->m5;
+        Display *display = td->display;
 
-        int d = 50;
-        unsigned char press1[77];
-        unsigned char press2[77];
-        unsigned char press3[77];
-
-        copyIcon(icons::press3, press1, { 0x45, 0x8b, 0xd1 });
-        copyIcon(icons::press2, press2, { 0x32, 0x65, 0x98 });
-        copyIcon(icons::press1, press3, { 0x23, 0x46, 0x6a });
+        auto anim = new animations::PressAnimation();
 
         Serial.println("[TASK] Starting Task ButtonWatch");
 
@@ -248,13 +232,7 @@ namespace sixtynine
         {
             if (m5->Btn.wasPressed())
             {
-
-                displayBuffer(press1);
-                sleep_for(milliseconds { d });
-                displayBuffer(press2);
-                sleep_for(milliseconds { d });
-                displayBuffer(press3);
-                sleep_for(milliseconds { d });
+                display->showAnimation(anim->getFrames());
 
                 Serial.println("[SYS] Button pressed");
                 mqtt->sendJson("button-pressed");

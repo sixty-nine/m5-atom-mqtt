@@ -4,12 +4,14 @@
 #include "M5Atom.h"
 #include "state.h"
 #include "mqtt.h"
+#include "icons.h"
 
 namespace sixtynine
 {
     struct taskData {
         State *state;
         Mqtt *mqtt;
+        Display *display;
         M5Atom *m5;
     };
 
