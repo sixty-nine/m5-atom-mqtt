@@ -9,6 +9,7 @@
 #include "mqtt.h"
 #include "state.h"
 #include "secrets.h"
+#include "icons.h"
 #include <ESP32Ping.h>
 
 namespace sixtynine
@@ -232,14 +233,33 @@ namespace sixtynine
         Mqtt *mqtt = td->mqtt;
         M5Atom *m5 = td->m5;
 
+        int d = 50;
+        unsigned char press1[77];
+        unsigned char press2[77];
+        unsigned char press3[77];
+
+        copyIcon(icons::press3, press1, { 0x45, 0x8b, 0xd1 });
+        copyIcon(icons::press2, press2, { 0x32, 0x65, 0x98 });
+        copyIcon(icons::press1, press3, { 0x23, 0x46, 0x6a });
+
         Serial.println("[TASK] Starting Task ButtonWatch");
 
         while (true)
         {
             if (m5->Btn.wasPressed())
             {
+
+                displayBuffer(press1);
+                sleep_for(milliseconds { d });
+                displayBuffer(press2);
+                sleep_for(milliseconds { d });
+                displayBuffer(press3);
+                sleep_for(milliseconds { d });
+
                 Serial.println("[SYS] Button pressed");
                 mqtt->sendJson("button-pressed");
+
+                m5->dis.clear();
             }
 
             m5->Btn.read();
