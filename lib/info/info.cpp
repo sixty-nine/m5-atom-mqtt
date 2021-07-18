@@ -127,7 +127,7 @@ namespace sixtynine
         network["ssid"] = String(SSID);
         network["rssi"] = netInfo->rssi;
 
-        mqtt->sendJson("status", &object);
+        mqtt->sendJson("info", &object);
     }
 
     void sendStatus(Mqtt *mqtt, memInfo *info)
