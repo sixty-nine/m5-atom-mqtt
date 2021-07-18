@@ -21,10 +21,12 @@ namespace sixtynine
         sleep_for(milliseconds { frame->duration });
     }
 
-    void Display::showAnimation(Frames *frames)
+    void Display::showAnimation(Frames *frames, uint8_t times)
     {
-        for(Frame frame : *frames) {
-            showFrame(&frame);
+        for (uint8_t i = 0; i < times; i++) {
+            for(Frame frame : *frames) {
+                showFrame(&frame);
+            }
         }
     }
 

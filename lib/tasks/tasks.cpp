@@ -213,12 +213,11 @@ namespace sixtynine
                 else {
                     Serial.println("[PING] OK");
                     mqtt->sendJson("heartbeat");
-                    display->showAnimation(anim->getFrames());
-                    display->showAnimation(anim->getFrames());
+                    display->showAnimation(anim->getFrames(), 2);
                 }
             }
 
-            sleep_for(milliseconds { 60000 });
+            sleep_for(milliseconds { 15000 });
         }
     }
 

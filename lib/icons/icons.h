@@ -45,7 +45,7 @@ namespace sixtynine
         public:
             Display(LED_DisPlay *display);
             void showFrame(Frame *frame);
-            void showAnimation(Frames *frames);
+            void showAnimation(Frames *frames, uint8_t times = 1);
             void displayBuffer(void * buff);
             void clear();
         private:
