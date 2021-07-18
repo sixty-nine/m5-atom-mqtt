@@ -191,6 +191,9 @@ namespace sixtynine
         auto td = (taskData *)data;
         Mqtt *mqtt = td->mqtt;
         State *state = td->state;
+        Display *display = td->display;
+
+        auto anim = new animations::HeartAnimation();
 
         Serial.println("[TASK] Starting Task pingGateway");
 
@@ -210,6 +213,8 @@ namespace sixtynine
                 else {
                     Serial.println("[PING] OK");
                     mqtt->sendJson("heartbeat");
+                    display->showAnimation(anim->getFrames());
+                    display->showAnimation(anim->getFrames());
                 }
             }
 

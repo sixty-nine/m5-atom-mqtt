@@ -162,6 +162,22 @@ namespace sixtynine
             0, 0, 0, 0, 0,
         };
 
+        const unsigned char heart1[25] = {
+            0, 1, 0, 1, 0,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            0, 1, 1, 1, 0,
+            0, 0, 1, 0, 0,
+        };
+
+        const unsigned char heart2[25] = {
+            0, 0, 0, 0, 0,
+            0, 1, 0, 1, 0,
+            0, 1, 1, 1, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 0, 0,
+        };
+
     }
 
     namespace animations {
@@ -219,6 +235,29 @@ namespace sixtynine
                     copyIcon(icons::point2, frame2.buffer, { 0x45, 0x8b, 0xd1 });
                     copyIcon(icons::point1, frame3.buffer, { 0x32, 0x65, 0x98 });
                     copyIcon(icons::blank,  frame4.buffer, { 0x45, 0x8b, 0xd1 });
+
+                    addFrame(&frame1);
+                    addFrame(&frame2);
+                    addFrame(&frame3);
+                    addFrame(&frame4);
+                }
+        };
+
+        class HeartAnimation: public Animation
+        {
+            public:
+                HeartAnimation() : Animation()
+                {
+                    long unsigned int duration = 100;
+                    Frame frame1 = { .duration = duration };
+                    Frame frame2 = { .duration = duration };
+                    Frame frame3 = { .duration = duration };
+                    Frame frame4 = { .duration = duration };
+
+                    copyIcon(icons::heart2, frame1.buffer, { 0x99, 0x00, 0x00 });
+                    copyIcon(icons::heart1, frame2.buffer, { 0xFF, 0x00, 0x00 });
+                    copyIcon(icons::heart2, frame3.buffer, { 0x99, 0x00, 0x00 });
+                    copyIcon(icons::blank,  frame4.buffer, { 0x00, 0x00, 0x00 });
 
                     addFrame(&frame1);
                     addFrame(&frame2);
