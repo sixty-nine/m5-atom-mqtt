@@ -47,6 +47,7 @@ namespace sixtynine
             void showFrame(Frame *frame);
             void showAnimation(Frames *frames);
             void displayBuffer(void * buff);
+            void clear();
         private:
             LED_DisPlay *_display;
             SemaphoreHandle_t _xSemaphore = NULL;
@@ -144,6 +145,23 @@ namespace sixtynine
             0, 0, 0, 0, 0,
             0, 0, 0, 0, 0,
         };
+
+        const unsigned char point1[25] = {
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0,
+        };
+
+        const unsigned char point2[25] = {
+            0, 0, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 1, 1, 1, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 0, 0,
+        };
+
     }
 
     namespace animations {
@@ -183,6 +201,29 @@ namespace sixtynine
                     addFrame(&frame1);
                     addFrame(&frame2);
                     addFrame(&frame3);
+                }
+        };
+
+        class InAnimation: public Animation
+        {
+            public:
+                InAnimation() : Animation()
+                {
+                    long unsigned int duration = 50;
+                    Frame frame1 = { .duration = duration };
+                    Frame frame2 = { .duration = duration };
+                    Frame frame3 = { .duration = duration };
+                    Frame frame4 = { .duration = duration };
+
+                    copyIcon(icons::point1, frame1.buffer, { 0x45, 0x8b, 0xd1 });
+                    copyIcon(icons::point2, frame2.buffer, { 0x45, 0x8b, 0xd1 });
+                    copyIcon(icons::point1, frame3.buffer, { 0x32, 0x65, 0x98 });
+                    copyIcon(icons::blank,  frame4.buffer, { 0x45, 0x8b, 0xd1 });
+
+                    addFrame(&frame1);
+                    addFrame(&frame2);
+                    addFrame(&frame3);
+                    addFrame(&frame4);
                 }
         };
 

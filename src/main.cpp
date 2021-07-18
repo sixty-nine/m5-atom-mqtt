@@ -23,6 +23,8 @@ Mqtt *mqtt = new Mqtt(
 
 Display *display = new Display(&M5.dis);
 
+auto heartBeatAnim = new animations::InAnimation();
+
 void setup()
 {
     M5.begin(true, false, true);
@@ -79,6 +81,8 @@ void sendPong()
 
 void onReceive(char *topic, char *payload)
 {
+    display->showAnimation(heartBeatAnim->getFrames());
+
     Serial.print("[MQTT] Message arrived: ");
     Serial.println(payload);
 
@@ -91,5 +95,7 @@ void onReceive(char *topic, char *payload)
     else if (myPayload.startsWith("display")) ;
     else if (myPayload.startsWith("draw")) ;
     else if (myPayload.startsWith("ping")) sendPong();
+
+    display->showAnimation(heartBeatAnim->getFrames());
 }
 

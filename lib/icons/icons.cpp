@@ -36,6 +36,13 @@ namespace sixtynine
         xSemaphoreGive(_xSemaphore);
     }
 
+    void Display::clear()
+    {
+        xSemaphoreTake(_xSemaphore, portMAX_DELAY);
+        _display->clear();
+        xSemaphoreGive(_xSemaphore);
+    }
+
     // ----- Animation ----------------------------------------------------------------------
 
     Animation::Animation()
